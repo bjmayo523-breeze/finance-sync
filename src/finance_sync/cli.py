@@ -18,6 +18,7 @@ import getpass
 import json
 import logging
 import logging.handlers
+import os
 import platform
 import re
 import subprocess
@@ -86,7 +87,8 @@ def _vault() -> Vault:
 
 def _cfg() -> config_mod.Config:
     if not paths.CONFIG_FILE.exists():
-        raise RuntimeError("config\\config.toml not found. Run scripts\\install.ps1 first.")
+        raise RuntimeError("config/config.toml not found. Run the install script first "
+                           "(scripts\\install.ps1 on Windows, scripts/install.sh on macOS/Linux).")
     return config_mod.load()
 
 
@@ -346,6 +348,27 @@ def cmd_status(args) -> int:
     return 0
 
 
+
+def _schedule_check() -> tuple[bool, str] | None:
+    """(registered?, how to fix) for this OS's scheduler, or None if we can't tell."""
+    system = platform.system()
+    try:
+        if system == "Windows":
+            r = subprocess.run(["schtasks", "/Query", "/TN", r"\FinanceSync\Finance Sync"],
+                               capture_output=True, text=True)
+            return r.returncode == 0, "run scripts\\register-task.ps1 (last setup step)"
+        if system == "Darwin":
+            r = subprocess.run(["launchctl", "print", f"gui/{os.getuid()}/com.financesync.sync"],
+                               capture_output=True, text=True)
+            return r.returncode == 0, "run bash scripts/register-launchd.sh (last setup step)"
+        if system == "Linux":
+            r = subprocess.run(["systemctl", "--user", "is-enabled", "finance-sync.timer"],
+                               capture_output=True, text=True)
+            return r.returncode == 0, "run bash scripts/register-systemd.sh (last setup step)"
+    except (FileNotFoundError, OSError):
+        return None
+    return None
+
 def cmd_doctor(args) -> int:
     ok_all = True
 
@@ -377,13 +400,10 @@ def cmd_doctor(args) -> int:
     stray = [p.name for p in paths.ROOT.glob("*.json")] + [p.name for p in (paths.ROOT / "config").glob("*.json")]
     check("No plaintext key files in project", not stray, ", ".join(stray))
 
-    if platform.system() == "Windows":
-        r = subprocess.run(
-            ["schtasks", "/Query", "/TN", r"\FinanceSync\Finance Sync"],
-            capture_output=True, text=True,
-        )
-        check("Scheduled task registered", r.returncode == 0,
-              "" if r.returncode == 0 else "run scripts\\register-task.ps1 (last setup step)", gate=False)
+    sched = _schedule_check()
+    if sched:
+        ok, hint = sched
+        check("Scheduled task registered", ok, "" if ok else hint, gate=False)
 
     if cfg.llm.enabled:
         try:

@@ -2,8 +2,9 @@
 
 Secrets (SimpleFIN access URL, Google service-account key) are encrypted with
 Fernet (AES-128-CBC + HMAC-SHA256) into data/secrets.vault. The 44-char Fernet
-key is stored in the OS keyring -- Windows Credential Manager on Windows --
-which is protected by your Windows login.
+key is stored in the OS keyring -- Windows Credential Manager on Windows, the
+login Keychain on macOS, Secret Service (GNOME Keyring / KWallet) on Linux --
+which is protected by your OS login.
 
 Why not put the secrets straight into Credential Manager? Windows caps a
 credential at ~1,280 characters and a Google key file is ~2,300.
@@ -44,7 +45,7 @@ class KeyStore(Protocol):
 
 
 class KeyringStore:
-    """Fernet key in the OS keyring (Windows Credential Manager)."""
+    """Fernet key in the OS keyring (Credential Manager / Keychain / Secret Service)."""
 
     def __init__(self) -> None:
         import keyring  # imported lazily so tests can avoid the OS backend
@@ -56,8 +57,9 @@ class KeyringStore:
         mod, name = type(backend).__module__, type(backend).__name__
         if "fail" in mod or "Plaintext" in name or "null" in mod:
             raise VaultError(
-                f"No secure OS keyring available (got {mod}.{name}). On Windows this "
-                "should be Windows Credential Manager; run as your own user, not SYSTEM."
+                f"No secure OS keyring available (got {mod}.{name}). Expected Windows "
+                "Credential Manager, the macOS Keychain, or a Secret Service keyring on Linux; "
+                "run as your own logged-in user, not SYSTEM/root."
             )
 
     def get(self) -> str | None:
@@ -114,7 +116,7 @@ class Vault:
         if key is None:
             if self.path.exists():
                 raise VaultError(
-                    "secrets.vault exists but its key is missing from Credential Manager. "
+                    "secrets.vault exists but its key is missing from the OS keyring. "
                     "Run `finance-sync forget-secrets`, then redo the setup steps."
                 )
             if not create:

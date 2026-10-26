@@ -2,21 +2,49 @@
 
 A stripped-down, self-hosted Tiller: pulls **read-only** bank, credit card and
 brokerage data from SimpleFIN once a day, categorizes it with your own rules
-(plus an optional local LLM), and appends it to a Google Sheet that Claude
-reads for analysis and charts.
+(plus an optional local LLM), and appends it to a Google Sheet you own. Any AI
+assistant that can read Google Sheets (Claude, ChatGPT) can then analyze it.
 
-**Start with `SETUP_CHECKLIST.md`.**
+Runs on **Windows, macOS and Linux**. **Start with `SETUP_CHECKLIST.md`.**
+
+## Quick start
+
+```bash
+# 1. a control folder for your own projects, then the code inside it
+mkdir -p ~/Projects && cd ~/Projects          # Windows PowerShell: mkdir $HOME\Projects; cd $HOME\Projects
+git clone https://github.com/bjmayo523-breeze/finance-sync.git
+cd finance-sync
+
+# 2. install
+bash scripts/install.sh                        # macOS / Linux
+# powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1    # Windows
+```
+
+| | Windows | macOS | Linux |
+|---|---|---|---|
+| Install | `scripts\install.ps1` | `scripts/install.sh` | `scripts/install.sh` |
+| Run a command | `.\scripts\finance-sync.ps1 <cmd>` | `./scripts/finance-sync.sh <cmd>` | `./scripts/finance-sync.sh <cmd>` |
+| Daily schedule | `scripts\register-task.ps1` (Task Scheduler) | `scripts/register-launchd.sh` (launchd) | `scripts/register-systemd.sh` (systemd user timer) |
+| Vault key stored in | Credential Manager | login Keychain | Secret Service (GNOME Keyring / KWallet) |
+| Disk encryption | BitLocker / Device Encryption | FileVault | LUKS |
+
+The examples below use the Windows form; on macOS/Linux swap
+`.\scripts\finance-sync.ps1` for `./scripts/finance-sync.sh`.
+
+To update later: `git pull`, then rerun the install script and
+`init-sheet --update-rules`. Your `config/config.toml`, `data/` and `logs/` are
+git-ignored, so a pull never touches them.
 
 ```
  Banks / cards / brokerage
           |  (your bank logins live here, at the aggregator)
    SimpleFIN Bridge  --- read-only protocol, no money movement ---
           |  HTTPS, access URL (encrypted on this laptop)
-   Finance Sync (this folder, Task Scheduler, daily + at logon)
+   Finance Sync (this folder; Task Scheduler / launchd / systemd, daily)
      - dedupe by transaction ID
      - Rules tab  ->  optional local Ollama  ->  Uncategorized
           |  Sheets API, service account (sees only the one shared sheet)
-   Google Sheet  <--- Claude reads it via your Google Sheets connector
+   Google Sheet  <--- your AI assistant reads it (Claude or ChatGPT connector)
 ```
 
 ## What it does / doesn't do
@@ -32,7 +60,7 @@ reads for analysis and charts.
 ## Folder layout
 
 ```
-Finance Sync/
+finance-sync/
   SETUP_CHECKLIST.md        manual steps, ordered by importance
   README.md                 this file
   config/
@@ -41,10 +69,11 @@ Finance Sync/
     seed_categories.csv     starter categories (loaded into the sheet once)
     seed_rules.csv          starter rules (loaded into the sheet once)
   scripts/
-    install.ps1             one-time setup (.venv + package + config)
-    finance-sync.ps1        run any command:  .\scripts\finance-sync.ps1 <command>
-    register-task.ps1       daily scheduled task
-    unregister-task.ps1     remove it
+    install.ps1 / install.sh            one-time setup (.venv + package + config)
+    finance-sync.ps1 / finance-sync.sh  run any command
+    register-task.ps1                   Windows: daily scheduled task (unregister-task.ps1 removes it)
+    register-launchd.sh                 macOS: daily launchd agent (unregister-launchd.sh removes it)
+    register-systemd.sh                 Linux: daily systemd user timer
   src/finance_sync/         the program
   tests/                    79 tests (fixtures only; no network)
   data/   (created)         secrets.vault (encrypted), state.json, sync.lock

@@ -3,6 +3,13 @@
 Ordered by importance. Steps 1-3 protect everything else, so do them first
 even though they produce nothing visible. Rough total: 60-90 minutes.
 
+> **macOS / Linux:** every step is the same; only the commands differ. Use
+> `bash scripts/install.sh` instead of `install.ps1`, `./scripts/finance-sync.sh`
+> instead of `.\scripts\finance-sync.ps1`, FileVault (`fdesetup status`) or LUKS
+> instead of BitLocker, and `scripts/register-launchd.sh` (macOS) or
+> `scripts/register-systemd.sh` (Linux) instead of `register-task.ps1`.
+> See the table in README.md.
+
 ---
 
 ## 1. Lock down your Google account  (most important)

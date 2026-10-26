@@ -105,7 +105,8 @@ def set_spreadsheet_id(sheet_id: str, path: Path | None = None) -> None:
     """Rewrite the spreadsheet_id line in config.toml, keeping comments."""
     path = path or paths.CONFIG_FILE
     if not path.exists():
-        raise FileNotFoundError(f"{path} not found. Run scripts\\install.ps1 first.")
+        raise FileNotFoundError(f"{path} not found. Run the install script first "
+                                "(scripts\\install.ps1 on Windows, scripts/install.sh on macOS/Linux).")
     text = path.read_text(encoding="utf-8")
     new_line = f'spreadsheet_id = "{sheet_id}"'
     text, n = re.subn(r'(?m)^spreadsheet_id\s*=.*$', new_line, text, count=1)
