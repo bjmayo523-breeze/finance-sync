@@ -1,0 +1,7 @@
+# Runtime deps (install.ps1 installs the package with `pip install -e .`, which reads pyproject.toml).
+requests>=2.31
+gspread>=6.0,<7
+google-auth>=2.25
+keyring>=25.0
+cryptography>=42.0
+tzdata>=2024.1

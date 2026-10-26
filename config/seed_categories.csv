@@ -1,0 +1,49 @@
+Category,Group,Type
+Paycheck,Income,Income
+Bonus,Income,Income
+RSU Income,Income,Income
+Interest,Income,Income
+Dividends,Income,Income
+Other Income,Income,Income
+Mortgage/Rent,Housing,Expense
+Utilities,Housing,Expense
+Internet & Phone,Housing,Expense
+Home Maintenance,Housing,Expense
+Groceries,Food,Expense
+Restaurants,Food,Expense
+Coffee,Food,Expense
+Snacks & Drinks,Food,Expense
+Alcohol & Bars,Food,Expense
+Fuel,Transportation,Expense
+Auto Payment,Transportation,Expense
+Student Loan,Debt,Expense
+Auto Maintenance,Transportation,Expense
+Parking & Tolls,Transportation,Expense
+Rideshare,Transportation,Expense
+Shopping,Shopping,Expense
+Electronics,Shopping,Expense
+Clothing,Shopping,Expense
+Medical,Health,Expense
+Pharmacy,Health,Expense
+Fitness,Health,Expense
+Pets,Pets,Expense
+Education,Family,Expense
+Insurance,Insurance,Expense
+Subscriptions,Subscriptions,Expense
+Software,Subscriptions,Expense
+Travel,Travel,Expense
+Entertainment,Entertainment,Expense
+Golf,Entertainment,Expense
+Gifts & Donations,Giving,Expense
+Shared Expenses,Other,Expense
+Bank Fees,Fees,Expense
+Interest Charged,Fees,Expense
+Taxes,Taxes,Expense
+RSU Withholding,Taxes,Transfer
+Transfer,Transfers,Transfer
+Credit Card Payment,Transfers,Transfer
+Investment Contribution,Transfers,Transfer
+Brokerage Trade,Transfers,Transfer
+Work Meals,Work,Transfer
+Reimbursement,Work,Transfer
+Uncategorized,Other,Expense

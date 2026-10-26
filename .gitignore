@@ -1,0 +1,12 @@
+# Never commit these
+data/
+logs/
+config/config.toml
+*.json.key
+*service-account*.json
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+*.vault

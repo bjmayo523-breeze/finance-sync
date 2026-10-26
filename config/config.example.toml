@@ -1,0 +1,56 @@
+# Finance Sync configuration.
+# install.ps1 copies this to config.toml. Nothing in this file is secret:
+# secrets live encrypted in data\secrets.vault, and the key to that vault
+# lives in Windows Credential Manager.
+
+[sheet]
+# Set with:  .\scripts\finance-sync.ps1 set-sheet <sheet URL or ID>
+spreadsheet_id = ""
+
+[general]
+timezone = "America/Chicago"
+
+[simplefin]
+backfill_days = 90        # history pulled on the very first run (banks often cap at ~90)
+overlap_days = 7          # each run re-reads this many days; dedupe drops repeats
+chunk_days = 45           # max days per API request (SimpleFIN warns above 45)
+include_pending = false   # pending txns can change ID when they post -> duplicates. Leave off.
+timeout_seconds = 60
+
+[sync]
+# SimpleFIN refreshes about once a day and has a daily request quota.
+# Scheduled runs inside this window are skipped. `sync --force` overrides.
+min_hours_between_runs = 20
+
+[llm]
+# Optional local-model fallback for transactions no rule matched.
+# Requires Ollama running on this machine. Off by default.
+enabled = false
+endpoint = "http://127.0.0.1:11434"
+model = "llama3.1:8b"
+timeout_seconds = 60
+max_per_run = 150
+# Refuses non-localhost endpoints unless true. Set true only for a machine
+# you own on your LAN (e.g. the homelab inference host).
+allow_remote = false
+
+[reimbursements]
+# Pair work-expense reimbursement deposits with the card charges they repay.
+# Matched charges become "Work Meals", deposits "Reimbursement"; both are
+# excluded from personal spending. See README "Reimbursements".
+enabled = false
+credit_pattern = ""              # regex for the deposit; make it specific to expense-report payouts
+expense_account_contains = ""    # e.g. "Rewards"
+expense_categories = ["Restaurants", "Coffee"]
+auto_window_days = 14            # charges this many days before the deposit are candidates
+auto_max_items = 2               # max charges per deposit when matching automatically
+tagged_window_days = 60          # window for charges you tagged "Work Meals" yourself
+stale_after_days = 45            # warn about tagged charges still unreimbursed after this
+
+[summary]
+# Monthly summary tabs (regenerated after every sync). See README "Dashboards".
+fixed_categories = ["Mortgage/Rent", "Auto Payment", "Student Loan", "Insurance", "Utilities", "Internet & Phone"]
+salary_categories = ["Paycheck"]
+equity_categories = ["RSU Income", "Bonus"]
+one_off_threshold = 300   # flexible charges this big from a new merchant count as one-offs
+home_value = 0            # your estimate of the home's value; 0 = leave home equity out of net worth

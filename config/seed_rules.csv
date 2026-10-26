@@ -1,0 +1,66 @@
+Priority,Pattern,Match,Field,Account Contains,Min Amount,Max Amount,Category,Notes
+10,re:PAYMENT\s*-?\s*THANK\s*YOU,regex,any,,,,Credit Card Payment,Card payment received
+10,AUTOMATIC PAYMENT,contains,any,,,,Credit Card Payment,
+10,re:^(YOU BOUGHT|YOU SOLD|BOUGHT|SOLD|BUY|SELL)\b,regex,description,,,,Brokerage Trade,Brokerage buy/sell lines
+10,REINVEST,contains,description,,,,Brokerage Trade,Dividend reinvestment
+20,DIVIDEND,contains,description,,0.01,,Dividends,
+20,re:INTEREST (PAID|EARNED|PAYMENT),regex,description,,0.01,,Interest,
+20,INTEREST CHARGE,contains,description,,,-0.01,Interest Charged,
+20,re:PAYROLL|DIRECT DEP|DIR DEP,regex,any,,0.01,,Paycheck,
+30,re:OVERDRAFT|SERVICE FEE|MONTHLY FEE|FOREIGN TRANSACTION FEE,regex,description,,,,Bank Fees,
+30,IRS USATAXPYMT,contains,description,,,,Taxes,
+40,AMAZON PRIME,contains,description,,,,Subscriptions,Before the general Amazon rule
+40,COSTCO GAS,contains,description,,,,Fuel,Before the general Costco rule
+40,re:UBER\s*EATS|DOORDASH|GRUBHUB,regex,description,,,,Restaurants,Before the general Uber rule
+50,re:\bH-?E-?B\b,regex,description,,,,Groceries,
+50,COSTCO,contains,description,,,,Groceries,
+50,re:WHOLEFDS|WHOLE FOODS|TRADER JOE|KROGER|ALDI|SPROUTS,regex,description,,,,Groceries,
+50,re:SHELL OIL|EXXON|CHEVRON|VALERO|BUC-?EE|CIRCLE K|7-ELEVEN,regex,description,,,,Fuel,
+50,re:\bUBER\b|\bLYFT\b,regex,description,,,,Rideshare,
+50,STARBUCKS,contains,description,,,,Coffee,
+50,re:AMAZON|AMZN,regex,description,,,,Shopping,
+50,re:\bTARGET\b|WAL-?MART,regex,description,,,,Shopping,
+50,re:NETFLIX|SPOTIFY|HULU|DISNEY\s*PLUS|YOUTUBE\s*PREMIUM|APPLE\.COM/BILL,regex,description,,,,Subscriptions,
+50,re:ANTHROPIC|CLAUDE\.AI|OPENAI|GITHUB,regex,description,,,,Software,
+50,re:TXTAG|NTTA|CTRMA|HCTRA,regex,description,,,,Parking & Tolls,Texas toll authorities
+50,re:AT&T|VERIZON|T-MOBILE|SPECTRUM|GOOGLE \*FI,regex,description,,,,Internet & Phone,
+50,re:\bCVS\b|WALGREENS,regex,description,,,,Pharmacy,
+90,re:\bTRANSFER\b|\bXFER\b,regex,description,,,,Transfer,Broad - keep low priority
+5,re:\bSYF\b|SYNCHRONY,regex,any,,,,Credit Card Payment,Store-card payments (Synchrony) - must beat the AMAZON rule
+5,re:CRCARDPMT|CREDIT\s?CRD|CREDITCARD|CARD\s*PMT|CRD\s*EPAY|AMEX\s*EPAYMENT|DISCOVER\s*E-?PAYMENT|APPLECARD|CITI\s*(CARD|AUTOPAY)|VISA\s*ONLINE\s*PMT,regex,any,,,,Credit Card Payment,Card payments leaving checking
+40,re:STARBUCKS|DUTCH BROS|DUNKIN|PEET'?S,regex,description,,,,Coffee,Before the TST* rule
+40,re:CRUNCHYROLL|PARAMOUNT|PEACOCK|HBO\s*MAX|MAX\.COM|AUDIBLE|SIRIUSXM|PATREON|YOUTUBE\s*PREMIUM|GOOGLE\s*ONE|ICLOUD,regex,description,,,,Subscriptions,
+45,re:^TST\*,regex,description,,,,Restaurants,Toast POS - nearly always restaurants
+50,re:CHICK-?FIL-?A|MCDONALD|WHATABURGER|TACO BELL|CHIPOTLE|SONIC DRIVE|WENDY'?S|PANERA|TORCHY|RAISING CANE|IN-N-OUT|JACK IN THE BOX|DOMINO'?S|PIZZA HUT|PAPA JOHN|POPEYES|SUBWAY\s*\d|SCHLOTZSKY|SHAKE SHACK|FIVE GUYS|JERSEY MIKE|JIMMY JOHN|PANDA EXPRESS|SALT LICK|KOLACHE|P\. TERRY,regex,description,,,,Restaurants,
+50,re:TEXACO|MURPHY\s*(USA|EXPRESS)|QUIKTRIP|\bQT\s*\d|RACETRAC|SUNOCO|\bMOBIL\b|CITGO|SPEEDWAY|WAWA|PHILLIPS 66|CONOCO|\bSHELL\b,regex,description,,,,Fuel,
+50,re:HOME DEPOT|LOWE'?S|ACE HARDWARE|HARBOR FREIGHT,regex,description,,,,Home Maintenance,
+50,re:BEST BUY|MICRO CENTER|NEWEGG|B&H PHOTO,regex,description,,,,Electronics,
+50,re:GEICO|PROGRESSIVE|STATE FARM|ALLSTATE|LEMONADE|LIBERTY MUTUAL,regex,description,,,,Insurance,
+50,re:PLANET FITNESS|LIFE TIME|ORANGETHEORY|ANYTIME FITNESS|GOLD'?S GYM,regex,description,,,,Fitness,
+50,re:SOUTHWEST AIR|DELTA AIR|UNITED AIR|AMERICAN AIR|AIRLINES|MARRIOTT|HILTON|HYATT|AIRBNB|EXPEDIA|HERTZ,regex,description,,,,Travel,
+50,re:PEDERNALES|\bPEC\b|ONCOR|\bTXU\b|RELIANT|ATMOS|TEXAS GAS SERVICE,regex,description,,,,Utilities,
+60,re:^GOOGLE\s*\*,regex,description,,,,Subscriptions,Google Play/Workspace charges - review occasionally
+5,PAYMENT TO CHASE CARD,contains,description,,,,Credit Card Payment,Chase card paid from checking
+10,re:(PURCHASE INTO|REDEMPTION FROM) CORE ACCOUNT|EXCHANGE\s*(IN|OUT)\b|REALIZED\s*GAIN\s*LOSS,regex,description,,,,Brokerage Trade,Internal brokerage movements - not cash flow
+10,JOURNALED RSU,contains,description,,,,RSU Withholding,Tax withheld on RSU vests and refunds of it
+10,MONEYLINK,contains,description,,,,Investment Contribution,Checking <-> Schwab transfers
+30,re:^FEES\b,regex,description,,,,Bank Fees,Brokerage/bank fee lines
+50,VISITPAY,contains,description,,,,Medical,Hospital billing portal
+50,re:\bAHS\b|AMERICAN HOME SHIELD,regex,description,,,,Insurance,Home warranty
+50,re:CINEMARK|AMC THEAT|ALAMO DRAFTHOUSE|TOPGOLF|DAVE (&|AND) BUSTER,regex,description,,,,Entertainment,
+50,re:MICROSOFT|ADOBE|DROPBOX,regex,description,,,,Software,
+50,SPLITWISE,contains,description,,,,Shared Expenses,Your share of shared costs; repayments to you net against it
+1,re:.,regex,any,MORTGAGE,,,Transfer,Loan-side of the mortgage payment; checking side is the expense
+5,re:CAPITAL ONE MOBILE PY?MT,regex,description,,,,Credit Card Payment,Both sides: checking out + card in
+10,MONEYLINE,contains,description,,,,Transfer,Fidelity -> checking
+10,re:DEPT EDUCATION|STUDENT LN|NELNET|MOHELA|AIDVANTAGE,regex,description,,,,Student Loan,
+45,re:^SWA\*,regex,description,,,,Travel,Southwest Airlines fees
+50,re:LIQUOR|\bSPEC'?S\b|TOTAL WINE,regex,description,,,,Alcohol & Bars,
+50,re:JCPENNEY|ZARA\.COM|LIVING SPACES|IKEA|BARNES & NOBLE|DOLLAR\s*TREE|DOLLAR GENERAL,regex,description,,,,Shopping,
+50,re:SHERWIN-?WILLIAMS,regex,description,,,,Home Maintenance,
+50,METROPOLIS PARKING,contains,description,,,,Parking & Tolls,
+50,DIGITALOCEAN,contains,description,,,,Software,
+50,re:\bRING\b.*PLAN|RING PROTECT,regex,description,,,,Subscriptions,
+50,re:\bVET\b|ANIMAL HOSPITAL|PETSMART|PETCO|CHEWY,regex,description,,,,Pets,
+50,re:JIFFY LUBE|DISCOUNT TIRE|FIRESTONE|VALVOLINE,regex,description,,,,Auto Maintenance,
+44,re:\bGOLF\b|GOLFNOW|TOPGOLF|PGA TOUR,regex,description,,,,Golf,

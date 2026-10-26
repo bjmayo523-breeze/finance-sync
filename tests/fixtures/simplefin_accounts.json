@@ -1,0 +1,55 @@
+{
+  "errors": ["Connection to Example Credit Union may need attention"],
+  "accounts": [
+    {
+      "org": {"domain": "examplebank.com", "name": "Example Bank", "sfin-url": "https://bridge.simplefin.org/simplefin"},
+      "id": "ACT-checking-001",
+      "name": "Everyday Checking ...1234",
+      "currency": "USD",
+      "balance": "4210.55",
+      "available-balance": "4100.00",
+      "balance-date": 1761200000,
+      "transactions": [
+        {"id": "TRN-1", "posted": 1761000000, "amount": "-84.12", "description": "H-E-B #123 SPRINGFIELD TX", "payee": "H-E-B"},
+        {"id": "TRN-2", "posted": 1761050000, "amount": "3150.00", "description": "ACME CORP PAYROLL", "payee": ""},
+        {"id": "TRN-3", "posted": 1761100000, "amount": "-500.00", "description": "ONLINE TRANSFER TO SAVINGS"},
+        {"id": "TRN-4", "posted": 0, "amount": "-12.00", "description": "PENDING COFFEE", "pending": true},
+        {"id": "TRN-5", "posted": 1761150000, "amount": "-23.40", "description": "=HYPERLINK(\"http://evil\")", "payee": "Mystery"}
+      ]
+    },
+    {
+      "org": {"domain": "examplecard.com", "name": "Example Card"},
+      "id": "ACT-card-002",
+      "name": "Rewards Visa",
+      "currency": "USD",
+      "balance": "-1320.10",
+      "balance-date": 1761200000,
+      "transactions": [
+        {"id": "TRN-1", "posted": 1761000500, "amount": "-15.99", "description": "NETFLIX.COM"},
+        {"id": "TRN-9", "posted": 1761060000, "amount": "-41.75", "description": "UBER EATS 8005928996"},
+        {"id": "TRN-10", "posted": 1761070000, "amount": "-19.20", "description": "UBER TRIP HELP.UBER.COM"},
+        {"id": "TRN-11", "posted": 1761080000, "amount": "900.00", "description": "PAYMENT - THANK YOU"},
+        {"id": "TRN-12", "posted": 1761090000, "amount": "-62.00", "description": "SOME LOCAL SHOP"}
+      ]
+    },
+    {
+      "conn_id": "CON-broker",
+      "id": "ACT-broker-003",
+      "name": "Individual Brokerage",
+      "currency": "USD",
+      "balance": "52000.00",
+      "balance-date": 1761200000,
+      "transactions": [
+        {"id": "B-1", "posted": 1761010000, "amount": "45.10", "description": "DIVIDEND RECEIVED VTI"},
+        {"id": "B-2", "posted": 1761020000, "amount": "-1000.00", "description": "YOU BOUGHT VXUS"}
+      ],
+      "holdings": [
+        {"id": "H-1", "symbol": "VTI", "description": "Vanguard Total Stock Market ETF", "shares": "100", "market_value": "30000.00", "cost_basis": "22000.00", "currency": "USD"},
+        {"id": "H-2", "symbol": "VXUS", "description": "Vanguard Total Intl Stock ETF", "shares": "300", "market_value": "22000.00", "cost_basis": "20500.00"}
+      ]
+    }
+  ],
+  "connections": [
+    {"conn_id": "CON-broker", "name": "Example Brokerage", "org_id": "ORG-x"}
+  ]
+}

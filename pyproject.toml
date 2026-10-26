@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finance-sync"
+version = "0.1.0"
+description = "Read-only bank/card/brokerage feed (SimpleFIN) -> categorized Google Sheet"
+requires-python = ">=3.11"
+dependencies = [
+  "requests>=2.31",
+  "gspread>=6.0,<7",
+  "google-auth>=2.25",
+  "keyring>=25.0",
+  "cryptography>=42.0",
+  "tzdata>=2024.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+finance-sync = "finance_sync.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
